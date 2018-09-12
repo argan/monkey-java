@@ -1,4 +1,4 @@
-package org.hydra.interpreter.token;
+package org.hydra.interpreter.parser;
 
 public class Precedences {
     public static final int LOWEST = 0;

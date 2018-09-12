@@ -21,4 +21,16 @@ public class Token {
     public String getLiteral() {
         return literal;
     }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "type=" + type.name() +
+                ", literal='" + literal + '\'' +
+                '}';
+    }
+
+    public int getPrecedence() {
+        return this.type.getPrecedence();
+    }
 }

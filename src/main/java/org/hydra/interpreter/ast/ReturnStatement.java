@@ -2,25 +2,23 @@ package org.hydra.interpreter.ast;
 
 import org.hydra.interpreter.token.TokenType;
 
-public class LetStatement implements Statement {
+public class ReturnStatement implements Statement {
     private final Expression value;
-    private final Idenifier identifier;
 
-    public LetStatement(Idenifier identifier, Expression value) {
-        this.identifier = identifier;
+    public ReturnStatement(Expression value) {
         this.value = value;
     }
 
-    public Expression getValue() {
+    public Expression getReturnValue() {
         return value;
-    }
-
-    public Idenifier getIdentifier() {
-        return identifier;
     }
 
     @Override
     public String tokenLiteral() {
-        return TokenType.LET.getLiteral();
+        return TokenType.RETURN.getLiteral();
+    }
+
+    public String toString() {
+        return "return " + value.toString()+";";
     }
 }

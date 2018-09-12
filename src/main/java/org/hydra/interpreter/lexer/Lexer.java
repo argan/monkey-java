@@ -31,9 +31,7 @@ public class Lexer {
             case '/':
                 token = new Token(TokenType.DIVIDE);
                 break;
-            case '=':
-                token = new Token(TokenType.ASSIGN);
-                break;
+
             case '{':
                 token = new Token(TokenType.LBRACE);
                 break;
@@ -61,7 +59,38 @@ public class Lexer {
             case ':':
                 token = new Token(TokenType.COLON);
                 break;
-
+            case '>':
+                if (peekChar() == '=') {
+                    readChar();
+                    token = new Token(TokenType.GTE, ">=");
+                } else {
+                    token = new Token(TokenType.GT);
+                }
+                break;
+            case '<':
+                if (peekChar() == '=') {
+                    readChar();
+                    token = new Token(TokenType.LTE, "<=");
+                } else {
+                    token = new Token(TokenType.LT);
+                }
+                break;
+            case '!':
+                if (peekChar() == '=') {
+                    readChar();
+                    token = new Token(TokenType.NE, "!=");
+                } else {
+                    token = new Token(TokenType.BANG);
+                }
+                break;
+            case '=':
+                if (peekChar() == '=') {
+                    readChar();
+                    token = new Token(TokenType.EQ, "==");
+                } else {
+                    token = new Token(TokenType.ASSIGN);
+                }
+                break;
             case 0:
                 token = new Token(TokenType.EOF);
                 break;
@@ -99,6 +128,12 @@ public class Lexer {
         return new String(input, current, cnt);
     }
 
+    private char peekChar() {
+        if (position >= input.length) {
+            return 0;
+        }
+        return input[readPosition];
+    }
 
     private void readChar() {
         if (readPosition >= input.length) {

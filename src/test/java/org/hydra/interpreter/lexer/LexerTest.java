@@ -11,14 +11,20 @@ public class LexerTest {
 
     @Test
     public void testNextToken() {
-        String input = "+={}()[]-,;:" +
+        String input = "+={}()[]-,;:><!" +
+                "!= == >= <=" +
                 "let five = 5;" +
                 "let ten = 10;" +
                 "let add = fn(x,y) {" +
                 "    x + y ; " +
                 "}" +
                 ";" +
-                "let result = add(five,ten);";
+                "let result = add(five,ten);" +
+                "if (5<10) {" +
+                "   return true;" +
+                "} else {" +
+                "   return false;" +
+                "}";
 
         Lexer lexer = new Lexer(input);
 
@@ -35,6 +41,13 @@ public class LexerTest {
                 new Object[]{TokenType.COMMA, ","},
                 new Object[]{TokenType.SEMICOLON, ";"},
                 new Object[]{TokenType.COLON, ":"},
+                new Object[]{TokenType.GT, ">"},
+                new Object[]{TokenType.LT, "<"},
+                new Object[]{TokenType.BANG, "!"},
+                new Object[]{TokenType.NE, "!="},
+                new Object[]{TokenType.EQ, "=="},
+                new Object[]{TokenType.GTE, ">="},
+                new Object[]{TokenType.LTE, "<="},
                 new Object[]{TokenType.LET, "let"},
                 new Object[]{TokenType.IDENTIFIER, "five"},
                 new Object[]{TokenType.ASSIGN, "="},
@@ -71,6 +84,24 @@ public class LexerTest {
                 new Object[]{TokenType.IDENTIFIER, "ten"},
                 new Object[]{TokenType.RPAREN, ")"},
                 new Object[]{TokenType.SEMICOLON, ";"},
+                new Object[]{TokenType.IF, "if"},
+                new Object[]{TokenType.LPAREN, "("},
+                new Object[]{TokenType.INTEGER, "5"},
+                new Object[]{TokenType.LT, "<"},
+                new Object[]{TokenType.INTEGER, "10"},
+                new Object[]{TokenType.RPAREN, ")"},
+                new Object[]{TokenType.LBRACE, "{"},
+                new Object[]{TokenType.RETURN, "return"},
+                new Object[]{TokenType.TRUE, "true"},
+                new Object[]{TokenType.SEMICOLON, ";"},
+                new Object[]{TokenType.RBRACE, "}"},
+                new Object[]{TokenType.ELSE, "else"},
+                new Object[]{TokenType.LBRACE, "{"},
+                new Object[]{TokenType.RETURN, "return"},
+                new Object[]{TokenType.FALSE, "false"},
+                new Object[]{TokenType.SEMICOLON, ";"},
+                new Object[]{TokenType.RBRACE, "}"},
+
 
         };
 
