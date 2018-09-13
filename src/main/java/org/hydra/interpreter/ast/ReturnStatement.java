@@ -13,6 +13,10 @@ public class ReturnStatement implements Statement {
         return value;
     }
 
+    public Expression getValue() {
+        return value;
+    }
+
     @Override
     public String tokenLiteral() {
         return TokenType.RETURN.getLiteral();

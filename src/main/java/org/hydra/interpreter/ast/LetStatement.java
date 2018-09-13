@@ -4,9 +4,9 @@ import org.hydra.interpreter.token.TokenType;
 
 public class LetStatement implements Statement {
     private final Expression value;
-    private final Idenifier identifier;
+    private final Identifier identifier;
 
-    public LetStatement(Idenifier identifier, Expression value) {
+    public LetStatement(Identifier identifier, Expression value) {
         this.identifier = identifier;
         this.value = value;
     }
@@ -15,7 +15,7 @@ public class LetStatement implements Statement {
         return value;
     }
 
-    public Idenifier getIdentifier() {
+    public Identifier getIdentifier() {
         return identifier;
     }
 

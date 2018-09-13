@@ -91,7 +91,7 @@ public class Parser {
         if (!expectPeek(TokenType.IDENTIFIER)) {
             return null;
         }
-        Idenifier idenifier = new Idenifier(current.getLiteral());
+        Identifier identifier = new Identifier(current.getLiteral());
         if (!expectPeek(TokenType.ASSIGN)) {
             return null;
         }
@@ -101,7 +101,7 @@ public class Parser {
         if (peekIs(TokenType.SEMICOLON)) {
             nextToken();
         }
-        return new LetStatement(idenifier, exp);
+        return new LetStatement(identifier, exp);
     }
 
     private Statement parseReturnStatement() {
@@ -184,7 +184,7 @@ public class Parser {
             return null;
         }
 
-        List<Idenifier> parameters = parseFunctionParameters();
+        List<Identifier> parameters = parseFunctionParameters();
         if (!expectPeek(TokenType.LBRACE)) {
             return null;
         }
@@ -195,21 +195,21 @@ public class Parser {
         return fun;
     }
 
-    private List<Idenifier> parseFunctionParameters() {
-        List<Idenifier> result = new ArrayList<>();
+    private List<Identifier> parseFunctionParameters() {
+        List<Identifier> result = new ArrayList<>();
         if (peekIs(TokenType.RPAREN)) {
             nextToken();
             return result;
         }
         nextToken();
 
-        Idenifier idenifier = new Idenifier(current.getLiteral());
-        result.add(idenifier);
+        Identifier identifier = new Identifier(current.getLiteral());
+        result.add(identifier);
 
         while (peekIs(TokenType.COMMA)) {
             nextToken();
             nextToken();
-            result.add(new Idenifier(current.getLiteral()));
+            result.add(new Identifier(current.getLiteral()));
         }
 
         if (!expectPeek(TokenType.RPAREN)) {
@@ -229,7 +229,7 @@ public class Parser {
     }
 
     private Expression parseIdentifier() {
-        return new Idenifier(current.getLiteral());
+        return new Identifier(current.getLiteral());
     }
 
     private Expression parseIntegerLiteral() {

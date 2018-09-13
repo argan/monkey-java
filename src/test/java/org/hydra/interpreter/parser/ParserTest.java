@@ -217,11 +217,11 @@ public class ParserTest {
     }
 
     private void testIdentier(Expression exp, String name) {
-        assertTrue(exp instanceof Idenifier);
-        Idenifier idenifier = (Idenifier) exp;
+        assertTrue(exp instanceof Identifier);
+        Identifier identifier = (Identifier) exp;
 
-        assertEquals("identifier", name, idenifier.getValue());
-        assertEquals("token literal", name, idenifier.tokenLiteral());
+        assertEquals("identifier", name, identifier.getValue());
+        assertEquals("token literal", name, identifier.tokenLiteral());
 
     }
 

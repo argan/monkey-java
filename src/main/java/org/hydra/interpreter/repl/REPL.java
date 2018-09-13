@@ -1,7 +1,10 @@
 package org.hydra.interpreter.repl;
 
 import org.hydra.interpreter.ast.Program;
+import org.hydra.interpreter.evaluator.Evaluator;
 import org.hydra.interpreter.lexer.Lexer;
+import org.hydra.interpreter.object.Environment;
+import org.hydra.interpreter.object.MObject;
 import org.hydra.interpreter.parser.Parser;
 
 import java.io.InputStream;
@@ -19,6 +22,7 @@ public class REPL {
 
     public void start() {
         Scanner scanner = new Scanner(in);
+        Environment env = new Environment();
         do {
             out.print("> ");
             String line = scanner.nextLine();
@@ -34,7 +38,10 @@ public class REPL {
                     }
                     continue;
                 }
-                out.println(program);
+                MObject result = Evaluator.eval(program, env);
+                if(result != null) {
+                    out.println(result);
+                }
             }
         } while (true);
     }

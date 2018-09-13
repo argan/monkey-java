@@ -1,9 +1,9 @@
 package org.hydra.interpreter.ast;
 
-public class Idenifier implements Expression {
+public class Identifier implements Expression {
     private final String value;
 
-    public Idenifier(String v) {
+    public Identifier(String v) {
         this.value = v;
     }
 
