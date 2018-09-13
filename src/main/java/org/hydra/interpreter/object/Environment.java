@@ -17,7 +17,7 @@ public class Environment {
 
     public MObject get(String name) {
         MObject obj = store.get(name);
-        if (parent != null) {
+        if (obj == null && parent != null) {
             return parent.get(name);
         }
         return obj;

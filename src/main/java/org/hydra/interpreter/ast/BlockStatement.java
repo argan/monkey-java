@@ -18,6 +18,6 @@ public class BlockStatement implements Statement {
 
     @Override
     public String toString() {
-        return statements.stream().map(stmt -> stmt.toString()).collect(Collectors.joining("{", "\n", "}"));
+        return statements.stream().map(stmt -> stmt.toString()).collect(Collectors.joining("\n"));
     }
 }

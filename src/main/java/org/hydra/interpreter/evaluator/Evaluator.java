@@ -3,6 +3,7 @@ package org.hydra.interpreter.evaluator;
 import org.hydra.interpreter.ast.*;
 import org.hydra.interpreter.object.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hydra.interpreter.object.MNull.NULL;
@@ -67,8 +68,56 @@ public class Evaluator {
             env.set(let.getIdentifier().getValue(), obj);
         } else if (node instanceof Identifier) {
             return evalIdentifier((Identifier) node, env);
+        } else if (node instanceof FunctionLiteral) {
+            FunctionLiteral func = (FunctionLiteral) node;
+            return new MFunction(func.getParameters(), func.getBody(), env);
+        } else if (node instanceof CallExpression) {
+            CallExpression call = (CallExpression) node;
+            MObject func = eval(call.getFunction(), env);
+            if (isError(func)) {
+                return func;
+            }
+            List<MObject> args = evalExpressions(call.getArguments(), env);
+            if (args.size() == 1 && isError(args.get(0))) {
+                return args.get(0);
+            }
+
+            return applyFunction(func, args, env);
         }
         return null;
+    }
+
+    private static MObject applyFunction(MObject obj, List<MObject> args, Environment env) {
+        if (!(obj instanceof MFunction)) {
+            return newError("not a function: %s", obj.type());
+        }
+        Environment newEnv = new Environment(env);
+        MFunction func = (MFunction) obj;
+        for (int i = 0; i < func.getParameters().size(); i++) {
+            newEnv.set(func.getParameters().get(i).getValue(), args.get(i));
+        }
+
+        MObject result = eval(func.getBody(), newEnv);
+
+        if (result instanceof MReturnValue) {
+            return ((MReturnValue) result).getValue();
+        } else {
+            return result;
+        }
+    }
+
+    private static List<MObject> evalExpressions(List<Expression> arguments, Environment env) {
+        List<MObject> result = new ArrayList<>();
+        for (Expression exp : arguments) {
+            MObject obj = eval(exp, env);
+            if (isError(obj)) {
+                result.clear();
+                result.add(obj);
+                return result;
+            }
+            result.add(obj);
+        }
+        return result;
     }
 
     private static MObject evalIdentifier(Identifier node, Environment env) {
