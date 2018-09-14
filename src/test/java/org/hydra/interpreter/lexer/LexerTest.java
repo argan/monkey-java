@@ -24,7 +24,8 @@ public class LexerTest {
                 "   return true;" +
                 "} else {" +
                 "   return false;" +
-                "}";
+                "}" +
+                "\"foo bar\"";
 
         Lexer lexer = new Lexer(input);
 
@@ -101,6 +102,7 @@ public class LexerTest {
                 new Object[]{TokenType.FALSE, "false"},
                 new Object[]{TokenType.SEMICOLON, ";"},
                 new Object[]{TokenType.RBRACE, "}"},
+                new Object[]{TokenType.STRING, "foo bar"},
 
 
         };

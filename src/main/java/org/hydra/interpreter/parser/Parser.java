@@ -41,6 +41,7 @@ public class Parser {
         prefixParserMap.put(TokenType.LPAREN, this::parseGroupExpression);
         prefixParserMap.put(TokenType.IF, this::parseIfExpression);
         prefixParserMap.put(TokenType.FUNCTION, this::parseFunctionLiteral);
+        prefixParserMap.put(TokenType.STRING, this::parseStringLiteral);
 
         infixParserMap.put(TokenType.PLUS, this::parseInfixExpression);
         infixParserMap.put(TokenType.MINUS, this::parseInfixExpression);
@@ -53,6 +54,10 @@ public class Parser {
         infixParserMap.put(TokenType.EQ, this::parseInfixExpression);
         infixParserMap.put(TokenType.NE, this::parseInfixExpression);
         infixParserMap.put(TokenType.LPAREN, this::parseCallExpression);
+    }
+
+    private Expression parseStringLiteral() {
+        return new StringLiteral(current.getLiteral());
     }
 
     public Program parseProgram() {

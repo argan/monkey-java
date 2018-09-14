@@ -76,6 +76,7 @@ public class EvaluatorTest {
                 {"let add = fn(x, y) { x + y; }; add(5, 5);", 10},
                 {"let add = fn(x, y) { x + y; }; add(5 + 5, add(5, 5));", 20},
                 {"fn(x) { x; }(5)", 5},
+                {"\"hello\" + \" world\"", "hello world"},
 
         };
 
@@ -116,6 +117,9 @@ public class EvaluatorTest {
         } else if (i instanceof Boolean) {
             assertTrue(msg, ObjectType.BOOLEAN_OBJ == obj.type());
             assertEquals(msg, i, ((MBoolean) obj).getValue());
+        } else if (i instanceof String) {
+            assertTrue(msg, ObjectType.STRING_OBJ == obj.type());
+            assertEquals(msg, i, ((MString) obj).getValue());
         }
 
     }

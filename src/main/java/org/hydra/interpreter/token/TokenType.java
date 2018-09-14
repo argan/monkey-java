@@ -5,8 +5,8 @@ import org.hydra.interpreter.parser.Precedences;
 import static org.hydra.interpreter.parser.Precedences.*;
 
 public enum TokenType {
-    ILLEGAL("IGGEGAL"), EOF("EOF"),
-    IDENTIFIER("IDENTIFIER"), INTEGER("INTEGER"),
+    ILLEGAL("ILLEGAL"), EOF("EOF"),
+    IDENTIFIER("IDENTIFIER"), INTEGER("INTEGER"),STRING("STRING"),
     ASSIGN("="), BANG("!"),
     PLUS("+", Precedences.PLUS), MINUS("-", Precedences.PLUS), MULTI("*", MULTIPLY), DIVIDE("/", MULTIPLY),
     COMMA(","), SEMICOLON(";"), COLON(":"),

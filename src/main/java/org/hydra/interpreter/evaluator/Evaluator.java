@@ -18,6 +18,8 @@ public class Evaluator {
             return eval(((ExpressionStatement) node).getExpression(), env);
         } else if (node instanceof IntegerLiteral) {
             return new MInteger(((IntegerLiteral) node).getValue());
+        } else if (node instanceof StringLiteral) {
+            return new MString(((StringLiteral) node).getValue());
         } else if (node instanceof BooleanLiteral) {
             return mbooleanValue(((BooleanLiteral) node).getValue());
         } else if (node instanceof PrefixExpression) {
@@ -145,6 +147,10 @@ public class Evaluator {
                 return mbooleanValue(left != right);
             } else {
                 return newError("unknown operator: %s %s %s", left.type(), operator, right.type());
+            }
+        } else if (left.type() == ObjectType.STRING_OBJ && right.type() == ObjectType.STRING_OBJ) {
+            if (operator.equals("+")) {
+                return new MString(((MString)left).getValue() + ((MString)right).getValue());
             }
         }
         return newError("type mismatch: %s %s %s", left.type(), operator, right.type());

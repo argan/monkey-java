@@ -326,4 +326,17 @@ public class ParserTest {
         testInfixExpression(exp.getArguments().get(2), 4, "*", 5);
         testLiteral(exp.getArguments().get(3), "foo");
     }
+
+    @Test
+    public void testStringLiteral() {
+        String input = "\"foo bar\";";
+        Program program = parseProgram(input);
+
+        assertEquals(1, program.getStatements().size());
+
+        assertTrue(program.getStatements().get(0) instanceof ExpressionStatement);
+        ExpressionStatement stmt = (ExpressionStatement) program.getStatements().get(0);
+        assertTrue(stmt.getExpression() instanceof StringLiteral);
+        assertEquals("foo bar", stmt.getExpression().tokenLiteral());
+    }
 }

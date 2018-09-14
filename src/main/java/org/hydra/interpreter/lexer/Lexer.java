@@ -91,6 +91,9 @@ public class Lexer {
                     token = new Token(TokenType.ASSIGN);
                 }
                 break;
+            case '"':
+                String s = readString();
+                return new Token(TokenType.STRING, s);
             case 0:
                 token = new Token(TokenType.EOF);
                 break;
@@ -108,14 +111,25 @@ public class Lexer {
         return token;
     }
 
+    private String readString() {
+        readChar();
+        int current = position;
+        while (true) {
+            readChar();
+            if (ch == '"') {
+                break;
+            }
+        }
+        readChar();
+        return new String(input, current, position - current - 1);
+    }
+
     private String readIdentifier() {
         int current = position;
-        int cnt = 0;
         while (isLetter(ch)) {
             readChar();
-            cnt++;
         }
-        return new String(input, current, cnt);
+        return new String(input, current, position - current);
     }
 
     private String readNumber() {
