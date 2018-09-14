@@ -1,9 +1,7 @@
 package org.hydra.interpreter.evaluator;
 
-import com.sun.tools.doclint.Env;
 import org.hydra.interpreter.ast.*;
 import org.hydra.interpreter.object.*;
-import sun.jvm.hotspot.opto.MachIfNode;
 
 import java.util.ArrayList;
 import java.util.List;
