@@ -8,5 +8,6 @@ public class Precedences {
     public static final int MULTIPLY = 4;
     public static final int PREFIX = 5;
     public static final int CALL = 6;
+    public static final int INDEX = 7;
 
 }

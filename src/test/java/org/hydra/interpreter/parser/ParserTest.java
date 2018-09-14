@@ -174,11 +174,19 @@ public class ParserTest {
                         "add((((a + b) + ((c * d) / f)) + g))",
                 },
 
+                {
+                        "a * [1, 2, 3, 4][b * c] * d",
+                        "((a * ([1, 2, 3, 4][(b * c)])) * d)",
+                },
+                {
+                        "add(a * b[2], b[1], 2 * [1, 2][1])",
+                        "add((a * (b[2])), (b[1]), (2 * ([1, 2][1])))",
+                },
         };
         for (String[] arr : expected) {
             Program program = parseProgram(arr[0]);
 
-            assertEquals(arr[1], program.toString());
+            assertEquals(arr[0], arr[1], program.toString());
         }
     }
 
@@ -326,6 +334,50 @@ public class ParserTest {
         testInfixExpression(exp.getArguments().get(2), 4, "*", 5);
         testLiteral(exp.getArguments().get(3), "foo");
     }
+
+    @Test
+    public void testArrayLiteral() {
+        String input = "[1,2*3, 4+5,foo]";
+        Program program = parseProgram(input);
+
+        assertEquals(1, program.getStatements().size());
+
+        assertTrue(program.getStatements().get(0) instanceof ExpressionStatement);
+
+        ExpressionStatement stmt = (ExpressionStatement) program.getStatements().get(0);
+
+        assertTrue(stmt.getExpression() instanceof ArrayLiteral);
+
+        ArrayLiteral exp = (ArrayLiteral) stmt.getExpression();
+
+        assertEquals(4, exp.getElements().size());
+        testLiteral(exp.getElements().get(0), 1);
+
+        testInfixExpression(exp.getElements().get(1), 2, "*", 3);
+        testInfixExpression(exp.getElements().get(2), 4, "+", 5);
+        testLiteral(exp.getElements().get(3), "foo");
+    }
+
+    @Test
+    public void testArrayIndexExpression() {
+        String input = "someArray[1+2]";
+        Program program = parseProgram(input);
+
+        assertEquals(1, program.getStatements().size());
+
+        assertTrue(program.getStatements().get(0) instanceof ExpressionStatement);
+
+        ExpressionStatement stmt = (ExpressionStatement) program.getStatements().get(0);
+
+        assertTrue(stmt.getExpression() instanceof IndexExpression);
+
+        IndexExpression exp = (IndexExpression) stmt.getExpression();
+
+        testLiteral(exp.getLeft(), "someArray");
+
+        testInfixExpression(exp.getIndex(), 1, "+", 2);
+    }
+
 
     @Test
     public void testStringLiteral() {

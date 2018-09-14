@@ -2,6 +2,7 @@ package org.hydra.interpreter.evaluator;
 
 import org.hydra.interpreter.ast.*;
 import org.hydra.interpreter.object.*;
+import sun.jvm.hotspot.opto.MachIfNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +86,44 @@ public class Evaluator {
             }
 
             return applyFunction(func, args, env);
+        } else if (node instanceof ArrayLiteral) {
+            List<MObject> args = evalExpressions(((ArrayLiteral) node).getElements(), env);
+            if (args.size() == 1 && isError(args.get(0))) {
+                return args.get(0);
+            }
+            return new MArray(args);
+        } else if (node instanceof IndexExpression) {
+            IndexExpression exp = (IndexExpression) node;
+            MObject left = eval(exp.getLeft(), env);
+            if (isError(left)) {
+                return left;
+            }
+            MObject index = eval(exp.getIndex(), env);
+            if (isError(index)) {
+                return index;
+            }
+
+            return evalIndexExpression(left, index);
         }
+
         return null;
+    }
+
+    private static MObject evalIndexExpression(MObject left, MObject index) {
+        if (left instanceof MArray && index instanceof MInteger) {
+            return evalArrayIndexExpression((MArray) left, (MInteger) index);
+        }
+        return newError("index operator not supported, %s", left.type());
+    }
+
+    private static MObject evalArrayIndexExpression(MArray left, MInteger index) {
+        int max = left.getElements().size() - 1;
+        int idx = index.getValue();
+
+        if (idx < 0 || idx > max) {
+            return NULL;
+        }
+        return left.getElements().get(idx);
     }
 
     private static MObject applyFunction(MObject obj, List<MObject> args, Environment env) {

@@ -42,6 +42,7 @@ public class Parser {
         prefixParserMap.put(TokenType.IF, this::parseIfExpression);
         prefixParserMap.put(TokenType.FUNCTION, this::parseFunctionLiteral);
         prefixParserMap.put(TokenType.STRING, this::parseStringLiteral);
+        prefixParserMap.put(TokenType.LBRACKET, this::parseArrayLiteral);
 
         infixParserMap.put(TokenType.PLUS, this::parseInfixExpression);
         infixParserMap.put(TokenType.MINUS, this::parseInfixExpression);
@@ -54,6 +55,7 @@ public class Parser {
         infixParserMap.put(TokenType.EQ, this::parseInfixExpression);
         infixParserMap.put(TokenType.NE, this::parseInfixExpression);
         infixParserMap.put(TokenType.LPAREN, this::parseCallExpression);
+        infixParserMap.put(TokenType.LBRACKET, this::parseIndexExpression);
     }
 
     private Expression parseStringLiteral() {
@@ -260,16 +262,27 @@ public class Parser {
     }
 
     private Expression parseCallExpression(Expression left) {
-        List<Expression> arguments = parseCallArguments();
+        List<Expression> arguments = parseExpressionList(TokenType.RPAREN);
 
-        CallExpression call = new CallExpression(left);
-        call.getArguments().addAll(arguments);
-        return call;
+        return new CallExpression(left, arguments);
     }
 
-    private List<Expression> parseCallArguments() {
+    private Expression parseIndexExpression(Expression left) {
+        nextToken();
+        Expression index = parseExpression(LOWEST);
+        if (!expectPeek(TokenType.RBRACKET)) {
+            return null;
+        }
+        return new IndexExpression(left, index);
+    }
+
+    private Expression parseArrayLiteral() {
+        return new ArrayLiteral(parseExpressionList(TokenType.RBRACKET));
+    }
+
+    private List<Expression> parseExpressionList(TokenType end) {
         List<Expression> arguments = new ArrayList<>();
-        if (peekIs(TokenType.RPAREN)) {
+        if (peekIs(end)) {
             nextToken();
             return arguments;
         }
@@ -283,7 +296,7 @@ public class Parser {
             arguments.add(parseExpression(LOWEST));
         }
 
-        if (!expectPeek(TokenType.RPAREN)) {
+        if (!expectPeek(end)) {
             return null;
         }
 

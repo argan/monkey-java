@@ -6,10 +6,11 @@ import java.util.stream.Collectors;
 
 public class CallExpression implements Expression {
     private final Expression function;
-    private final List<Expression> arguments = new ArrayList<>();
+    private final List<Expression> arguments;
 
-    public CallExpression(Expression function) {
+    public CallExpression(Expression function, List<Expression> arguments) {
         this.function = function;
+        this.arguments = arguments;
     }
 
     public Expression getFunction() {

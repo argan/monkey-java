@@ -39,7 +39,7 @@ public class Lexer {
                 token = new Token(TokenType.RBRACE);
                 break;
             case '[':
-                token = new Token(TokenType.LBRACKT);
+                token = new Token(TokenType.LBRACKET);
                 break;
             case ']':
                 token = new Token(TokenType.RBRACKET);

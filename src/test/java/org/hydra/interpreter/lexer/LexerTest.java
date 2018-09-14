@@ -36,7 +36,7 @@ public class LexerTest {
                 new Object[]{TokenType.RBRACE, "}"},
                 new Object[]{TokenType.LPAREN, "("},
                 new Object[]{TokenType.RPAREN, ")"},
-                new Object[]{TokenType.LBRACKT, "["},
+                new Object[]{TokenType.LBRACKET, "["},
                 new Object[]{TokenType.RBRACKET, "]"},
                 new Object[]{TokenType.MINUS, "-"},
                 new Object[]{TokenType.COMMA, ","},

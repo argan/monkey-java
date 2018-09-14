@@ -10,7 +10,7 @@ public enum TokenType {
     ASSIGN("="), BANG("!"),
     PLUS("+", Precedences.PLUS), MINUS("-", Precedences.PLUS), MULTI("*", MULTIPLY), DIVIDE("/", MULTIPLY),
     COMMA(","), SEMICOLON(";"), COLON(":"),
-    LPAREN("(", CALL), RPAREN(")"), LBRACE("{"), RBRACE("}"), LBRACKT("["), RBRACKET("]"),
+    LPAREN("(", CALL), RPAREN(")"), LBRACE("{"), RBRACE("}"), LBRACKET("[",INDEX), RBRACKET("]"),
     GT(">", LESSGREATER), LT("<", LESSGREATER), GTE(">=", LESSGREATER), LTE("<=", LESSGREATER),
     EQ("==", EQUALS), NE("!=", EQUALS),
     FUNCTION("fn"), LET("let"), TRUE("true"), FALSE("false"), IF("if"), ELSE("else"), RETURN("return");
