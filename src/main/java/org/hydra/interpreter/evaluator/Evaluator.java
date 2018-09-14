@@ -90,21 +90,27 @@ public class Evaluator {
     }
 
     private static MObject applyFunction(MObject obj, List<MObject> args, Environment env) {
-        if (!(obj instanceof MFunction)) {
-            return newError("not a function: %s", obj.type());
-        }
-        Environment newEnv = new Environment(env);
-        MFunction func = (MFunction) obj;
-        for (int i = 0; i < func.getParameters().size(); i++) {
-            newEnv.set(func.getParameters().get(i).getValue(), args.get(i));
+        MObject result = null;
+        if (obj instanceof MFunction) {
+            Environment newEnv = new Environment(env);
+            MFunction func = (MFunction) obj;
+            for (int i = 0; i < func.getParameters().size(); i++) {
+                newEnv.set(func.getParameters().get(i).getValue(), args.get(i));
+            }
+
+            result = eval(func.getBody(), newEnv);
+        } else if (obj instanceof MBuiltin) {
+            result = ((MBuiltin) obj).getFunc().apply(args.toArray(new MObject[args.size()]));
         }
 
-        MObject result = eval(func.getBody(), newEnv);
-
-        if (result instanceof MReturnValue) {
-            return ((MReturnValue) result).getValue();
+        if (result != null) {
+            if (result instanceof MReturnValue) {
+                return ((MReturnValue) result).getValue();
+            } else {
+                return result;
+            }
         } else {
-            return result;
+            return newError("not a function: %s", obj.type());
         }
     }
 
@@ -124,6 +130,9 @@ public class Evaluator {
 
     private static MObject evalIdentifier(Identifier node, Environment env) {
         MObject obj = env.get(node.getValue());
+        if (obj == null) {
+            obj = Builtins.get(node.getValue());
+        }
         if (obj == null) {
             return newError("identifier not found: %s", node.getValue());
         }
@@ -150,7 +159,7 @@ public class Evaluator {
             }
         } else if (left.type() == ObjectType.STRING_OBJ && right.type() == ObjectType.STRING_OBJ) {
             if (operator.equals("+")) {
-                return new MString(((MString)left).getValue() + ((MString)right).getValue());
+                return new MString(((MString) left).getValue() + ((MString) right).getValue());
             }
         }
         return newError("type mismatch: %s %s %s", left.type(), operator, right.type());
@@ -242,7 +251,7 @@ public class Evaluator {
         return result;
     }
 
-    private static MError newError(String format, Object... args) {
+    static MError newError(String format, Object... args) {
         return new MError(String.format(format, args));
     }
 
