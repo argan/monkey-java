@@ -43,6 +43,7 @@ public class Parser {
         prefixParserMap.put(TokenType.FUNCTION, this::parseFunctionLiteral);
         prefixParserMap.put(TokenType.STRING, this::parseStringLiteral);
         prefixParserMap.put(TokenType.LBRACKET, this::parseArrayLiteral);
+        prefixParserMap.put(TokenType.LBRACE, this::parseHashLiteral);
 
         infixParserMap.put(TokenType.PLUS, this::parseInfixExpression);
         infixParserMap.put(TokenType.MINUS, this::parseInfixExpression);
@@ -56,6 +57,7 @@ public class Parser {
         infixParserMap.put(TokenType.NE, this::parseInfixExpression);
         infixParserMap.put(TokenType.LPAREN, this::parseCallExpression);
         infixParserMap.put(TokenType.LBRACKET, this::parseIndexExpression);
+
     }
 
     private Expression parseStringLiteral() {
@@ -184,7 +186,27 @@ public class Parser {
         }
         return left;
     }
+    private Expression parseHashLiteral() {
+        Map<Expression,Expression> kvs = new HashMap<>();
+        while(!peekIs(TokenType.RBRACE)) {
+            nextToken();
+            Expression key = parseExpression(LOWEST);
+            if(!expectPeek(TokenType.COLON)) {
+                return null;
+            }
+            nextToken();
+            Expression value = parseExpression(LOWEST);
+            kvs.put(key,value);
 
+            if (!peekIs(TokenType.RBRACE) && !expectPeek(TokenType.COMMA)) {
+                return null;
+            }
+        }
+        if (!expectPeek(TokenType.RBRACE)) {
+            return null;
+        }
+        return new HashLiteral(kvs);
+    }
     private Expression parseFunctionLiteral() {
 
         if (!expectPeek(TokenType.LPAREN)) {

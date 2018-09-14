@@ -18,6 +18,7 @@ public class Builtins {
         builtins.put("last", new MBuiltin("last", new Last()));
         builtins.put("rest", new MBuiltin("rest", new Rest()));
         builtins.put("push", new MBuiltin("push", new Push()));
+        builtins.put("puts", new MBuiltin("puts", new Puts()));
     }
 
     public static MBuiltin get(String name) {
@@ -75,6 +76,7 @@ public class Builtins {
             return Evaluator.newError("argument to 'last' not supported ,got %s", args[0].type());
         }
     }
+
     private static class Rest implements BuiltinFunction {
 
         @Override
@@ -94,7 +96,9 @@ public class Builtins {
             }
             return Evaluator.newError("argument to 'rest' not supported ,got %s", args[0].type());
         }
-    }private static class Push implements BuiltinFunction {
+    }
+
+    private static class Push implements BuiltinFunction {
 
         @Override
         public MObject apply(MObject... args) {
@@ -104,11 +108,25 @@ public class Builtins {
             if (args[0] instanceof MArray) {
 
                 List<MObject> newArr = new ArrayList<>();
-                newArr.addAll(((MArray)args[0]).getElements());
+                newArr.addAll(((MArray) args[0]).getElements());
                 newArr.add(args[1]);
                 return new MArray(newArr);
             }
             return Evaluator.newError("argument to 'push' not supported ,got %s", args[0].type());
+        }
+    }
+
+    private static class Puts implements BuiltinFunction {
+
+        @Override
+        public MObject apply(MObject... args) {
+            if (args == null) {
+                return Evaluator.newError("wrong number of arguments, need at least 1 but null");
+            }
+            for (MObject arg : args) {
+                System.out.println(arg.toString());
+            }
+            return NULL;
         }
     }
 }

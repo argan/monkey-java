@@ -1,6 +1,6 @@
 package org.hydra.interpreter.object;
 
-public class MString implements MObject {
+public class MString implements MObject, Hashable {
     private final String value;
 
     public String getValue() {
@@ -18,5 +18,10 @@ public class MString implements MObject {
 
     public String toString() {
         return value;
+    }
+
+    @Override
+    public HashKey hashKey() {
+        return new HashKey(ObjectType.STRING_OBJ, value.hashCode());
     }
 }

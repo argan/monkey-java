@@ -1,6 +1,6 @@
 package org.hydra.interpreter.object;
 
-public class MBoolean implements MObject {
+public class MBoolean implements MObject, Hashable {
 
     public static final MBoolean TRUE = new MBoolean(true);
     public static final MBoolean FALSE = new MBoolean(false);
@@ -23,5 +23,10 @@ public class MBoolean implements MObject {
     @Override
     public ObjectType type() {
         return ObjectType.BOOLEAN_OBJ;
+    }
+
+    @Override
+    public HashKey hashKey() {
+        return new HashKey(ObjectType.BOOLEAN_OBJ, value ? 1 : 0);
     }
 }

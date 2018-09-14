@@ -87,7 +87,13 @@ public class EvaluatorTest {
                 {"let myArray = [1, 2, 3]; let i = myArray[0]; myArray[i]", 2,},
                 {"[1, 2, 3][3]", null,},
                 {"[1, 2, 3][-1]", null,},
-
+                {"{\"foo\": 5}[\"foo\"]", 5,},
+                {"{\"foo\": 5}[\"bar\"]", null,},
+                {"let key = \"foo\"; {\"foo\": 5}[key]", 5,},
+                {"{}[\"foo\"]", null,},
+                {"{5: 5}[5]", 5,},
+                {"{true: 5}[true]", 5,},
+                {"{false: 5}[false]", 5,},
         };
 
         for (Object[] arr : expectes) {
@@ -104,9 +110,14 @@ public class EvaluatorTest {
                 {"-true", "unknown operator: -BOOLEAN_OBJ",},
                 {"true + false;", "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
                 {"5; true + false; 5", "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
-                {"if (10 > 1) { true + false; }", "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
-                {"if (10 > 1) {  if (10 > 1) {    return true + false;} return 1;}", "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
+                {"if (10 > 1) { true + false; }",
+                        "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
+                {"if (10 > 1) {  if (10 > 1) {    return true + false;} return 1;}",
+                        "unknown operator: BOOLEAN_OBJ + BOOLEAN_OBJ",},
                 {"foobar", "identifier not found: foobar",},
+                {"{\"name\": \"Monkey\"}[fn(x) { x }];",
+                        "unusable as hash key: FUNCTION_OBJ",},
+
         };
 
         for (String[] arr : expectes) {

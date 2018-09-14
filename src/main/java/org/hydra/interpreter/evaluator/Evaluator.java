@@ -1,5 +1,6 @@
 package org.hydra.interpreter.evaluator;
 
+import com.sun.tools.doclint.Env;
 import org.hydra.interpreter.ast.*;
 import org.hydra.interpreter.object.*;
 import sun.jvm.hotspot.opto.MachIfNode;
@@ -104,14 +105,42 @@ public class Evaluator {
             }
 
             return evalIndexExpression(left, index);
+        } else if (node instanceof HashLiteral) {
+            return evalHashLiteral((HashLiteral) node, env);
         }
 
         return null;
     }
 
+    private static MObject evalHashLiteral(HashLiteral node, Environment env) {
+        MHash hash = new MHash();
+
+        for (Expression exp : node.getPairs().keySet()) {
+            MObject key = eval(exp, env);
+            if (isError(key)) {
+                return key;
+            }
+            if (!(key instanceof Hashable)) {
+                return newError("unusable as hash key %s", key.type());
+            }
+            MObject value = eval(node.getPairs().get(exp), env);
+            if (isError(value)) {
+                return value;
+            }
+            hash.put(key, value);
+        }
+        return hash;
+    }
+
     private static MObject evalIndexExpression(MObject left, MObject index) {
         if (left instanceof MArray && index instanceof MInteger) {
             return evalArrayIndexExpression((MArray) left, (MInteger) index);
+        } else if (left instanceof MHash) {
+            if (index instanceof Hashable) {
+                return ((MHash) left).get((Hashable) index);
+            } else {
+                return newError("unusable as hash key: %s", index.type());
+            }
         }
         return newError("index operator not supported, %s", left.type());
     }
